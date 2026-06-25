@@ -48,22 +48,27 @@ cargo build --release   # → target/release/skm
 ## Quick start
 
 ```sh
-# 1. Create a manifest in the current project, then pick your agent(s) once by
-#    uncommenting [defaults].agents in skm.toml.
-#    Skip this and pass --agent on each add instead.
+# 1. Create a manifest in your project, then edit skm.toml:
+#    uncomment `agents = […]` under [defaults] and pick your agent(s).
+#    (Or skip this and pass --agent on each `skm add`.)
 skm init
 
-# 2. Add a skill (smart spec detection: ./path → local, owner/repo → GitHub,
-#    URL suffix → tar/zip, otherwise git). This edits the manifest, updates the
-#    lock, and deploys in one step. Without [defaults].agents, pass --agent.
-skm add anthropics/skills --subdir docx --agent claude
-skm add ./vendor/reviewer
-skm add https://example.com/skills/my-tool.tar.gz --sha256 <hex>
+# 2. Add skills. Specs are auto-detected: owner/repo → GitHub, ./path →
+#    local, URL suffix → tar/zip, otherwise git. Each command edits the
+#    manifest, resolves, locks, and deploys in one step.
+skm add anthropics/skills --subdir docx     # GitHub owner/repo + subdirectory
+skm add anthropics/skills@v1.2              # pin with an inline @ref
+skm add ./vendor/reviewer                   # local directory
+skm add foo.tar.gz --sha256 <hex>           # archive, byte-verified
 
-# 3. See what is installed.
+# 3. Remove a skill from the manifest (the on-disk copy is pruned on the
+#    next sync; pass --no-sync to defer both the lock update and deploy).
+skm rm docx
+
+# 4. See what is installed.
 skm status
 
-# 4. Reproduce exactly elsewhere (CI):
+# 5. Reproduce exactly elsewhere (CI):
 skm sync --frozen
 ```
 
