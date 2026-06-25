@@ -34,9 +34,22 @@ pub fn run(args: AddArgs) -> Result<ExitCode> {
     // Pollution guard: refuse implicit project manifest in home/root.
     if !args.global && !manifest_exists && !args.force {
         let cwd = std::env::current_dir().map_err(|e| SkmError::io(e.to_string()))?;
-        let home = config::home_dir().ok();
-        let is_home = home.as_deref().map(|h| h == cwd).unwrap_or(false);
+        let cwd_canon = std::fs::canonicalize(&cwd).ok();
+
+        // Canonicalize both to survive macOS /var → /private/var symlink
+        // divergence: env::current_dir() resolves symlinks, but HOME may
+        // not, so a literal `==` returns false for the same directory.
+        let home_canon = config::home_dir()
+            .ok()
+            .and_then(|h| std::fs::canonicalize(&h).ok());
+
+        let is_home = home_canon
+            .zip(cwd_canon)
+            .map(|(h, c)| h == c)
+            .unwrap_or(false);
+
         let is_root = cwd.parent().is_none();
+
         if is_home || is_root {
             return Err(SkmError::general(three_part(
                 "error: refusing to create a project skm.toml in your home (or filesystem root) directory",

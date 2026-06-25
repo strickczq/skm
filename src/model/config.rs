@@ -146,11 +146,18 @@ fn project_flock_path(scope_dir: &Path) -> Result<PathBuf> {
 /// Search upward from `start` for the nearest directory containing `skm.toml`,
 /// skipping the global config dir.
 pub fn find_project_manifest_dir(start: &Path) -> Result<Option<PathBuf>> {
-    let skm_config = config_dir().ok();
+    // Canonicalize so the macOS /var → /private/var symlink doesn't defeat the
+    // config-dir skip guard (same root cause as the pollution guard in add.rs).
+    let skm_config = config_dir()
+        .ok()
+        .and_then(|c| std::fs::canonicalize(&c).ok());
     let mut cur: Option<&Path> = Some(start);
     while let Some(dir) = cur {
-        let skip = skm_config.as_deref().map(|c| c == dir).unwrap_or(false);
-        if !skip && dir.join("skm.toml").is_file() {
+        let is_config_dir = match &skm_config {
+            Some(cfg) => std::fs::canonicalize(dir).is_ok_and(|d| d == *cfg),
+            None => false,
+        };
+        if !is_config_dir && dir.join("skm.toml").is_file() {
             return Ok(Some(dir.to_path_buf()));
         }
         cur = dir.parent();
