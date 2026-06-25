@@ -1,0 +1,45 @@
+[package]
+name = "skm"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+description = "skm — declaratively manage agent skills"
+license = "MIT"
+repository = "https://github.com/strickczq/skm"
+readme = "README.md"
+keywords = ["skills", "agent", "claude", "codex", "cli"]
+categories = ["command-line-utilities"]
+
+[[bin]]
+name = "skm"
+path = "src/main.rs"
+
+[dependencies]
+anstream = "1.0"
+anstyle = "1.0"
+clap = { version = "4.5", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+toml = "1.0"
+toml_edit = "0.25"
+sha2 = "0.11"
+reqwest = { version = "0.13", default-features = false, features = [
+    "blocking",
+    "rustls",
+] }
+zip = { version = "8.0", default-features = false, features = ["deflate"] }
+tar = { version = "0.4", default-features = false }
+flate2 = "1.0"
+zstd = { version = "0.13", default-features = false }
+xz2 = "0.1"
+reflink-copy = "0.1"
+dirs = "6.0"
+rustix = { version = "1.0", features = ["fs"] }
+
+[dev-dependencies]
+assert_cmd = "2.0"
+mockito = "1.7.2"
+predicates = "3.1"
+tempfile = "3.10"
+
+[profile.release]
+strip = true
