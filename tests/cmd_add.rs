@@ -327,7 +327,7 @@ fn add_tar_url_detects_kind_and_infers_name() {
     let url = format!("{}/unix-util.tar.gz", server.url());
     write_file(
         &env.manifest_path(),
-        "version = 1\n[defaults]\nagents = [\"claude-code\"]\n",
+        "version = 1\n[defaults]\nagents = [\"agents\"]\n",
         false,
     );
 
@@ -352,7 +352,7 @@ fn add_zip_url_detects_kind_and_infers_name() {
     let url = format!("{}/my-tool.zip", server.url());
     write_file(
         &env.manifest_path(),
-        "version = 1\n[defaults]\nagents = [\"claude-code\"]\n",
+        "version = 1\n[defaults]\nagents = [\"claude\"]\n",
         false,
     );
 

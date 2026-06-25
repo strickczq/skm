@@ -23,8 +23,8 @@ scanning, or manage plugins / hooks / settings.
 - **Four source types**: `git`, `tar`, `zip`, and `local`.
 - **Content lock, not dependency lock**: `skm.lock` records the SHA-256 of the
   installed file tree; `--frozen`/`--locked` gate only on that.
-- **Multi-agent deployment**: one skill can deploy to both `claude-code`,
-  `codex` and more; each lands atomically and independently.
+- **Multi-agent deployment**: one skill can deploy to both `claude`, `codex` and
+  more; each lands atomically and independently.
 - **Safe by default**: skm only touches skills it installed itself. Foreign
   (manually placed) directories are never auto-deleted.
 - **Content-addressed cache** under `~/.cache/skm/` for fast, offline-capable
@@ -56,7 +56,7 @@ skm init
 # 2. Add a skill (smart spec detection: ./path → local, owner/repo → GitHub,
 #    URL suffix → tar/zip, otherwise git). This edits the manifest, updates the
 #    lock, and deploys in one step. Without [defaults].agents, pass --agent.
-skm add anthropics/skills --subdir docx --name docx --agent claude-code
+skm add anthropics/skills --subdir docx --agent claude
 skm add ./vendor/reviewer
 skm add https://example.com/skills/my-tool.tar.gz --sha256 <hex>
 
@@ -108,7 +108,7 @@ Skills install under:
 | command                                                                                 | description                                                     |
 | --------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
 | `skm init [--force]`                                                                    | Write a commented `skm.toml` template.                          |
-| `skm lock [--upgrade [<name>…]]`                             | Resolve the manifest → write `skm.lock` (no deploy).            |
+| `skm lock [--upgrade [<name>…]]`                                                        | Resolve the manifest → write `skm.lock` (no deploy).            |
 | `skm sync [--frozen] [--locked] [--dry-run] [--offline] [--prune] [--no-prune] [--yes]` | The core convergence command: lock new/changed, deploy, prune.  |
 | `skm add <spec> [opts]` (`a`)                                                           | Edit manifest → lock → sync. `--no-sync` defers deploy.         |
 | `skm update [<name>…] [--dry-run] [--offline] [--no-prune] [--yes]` (`up`, `upgrade`)   | Re-resolve mutable refs and deploy (`lock --upgrade` + `sync`). |

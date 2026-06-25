@@ -28,7 +28,7 @@ fn installed_on_each_agent_is_exit_0() {
 
     let (code, s) = out(&env, &["status"]);
     assert_eq!(code, 0, "all installed → 0; got {s}");
-    // `a` lands on both roots, `b` only on claude-code.
+    // `a` lands on both roots, `b` only on agents.
     assert!(env.agents_root().join("a").is_dir() && env.codex_root().join("a").is_dir());
     assert!(env.agents_root().join("b").is_dir() && !env.codex_root().join("b").exists());
     assert!(

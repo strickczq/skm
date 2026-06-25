@@ -12,7 +12,7 @@ fn manifest_missing_version_errors() {
     env.create_local_skill("x", &[]);
     write_file(
         &env.manifest_path(),
-        "[defaults]\nagents = [\"claude-code\"]\n\n[[skills]]\nname = \"x\"\nlocal = \"./vendor/x\"\n",
+        "[defaults]\nagents = [\"agents\"]\n\n[[skills]]\nname = \"x\"\nlocal = \"./vendor/x\"\n",
         false,
     );
     env.skm()
@@ -29,7 +29,7 @@ fn manifest_unsupported_version_errors() {
     env.create_local_skill("x", &[]);
     write_file(
         &env.manifest_path(),
-        "version = 2\n[defaults]\nagents = [\"claude-code\"]\n\n[[skills]]\nname = \"x\"\nlocal = \"./vendor/x\"\n",
+        "version = 2\n[defaults]\nagents = [\"agents\"]\n\n[[skills]]\nname = \"x\"\nlocal = \"./vendor/x\"\n",
         false,
     );
     env.skm()
